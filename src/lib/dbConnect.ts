@@ -1,7 +1,8 @@
 
 import mongoose from "mongoose";
+import dotenv from "dotenv"
 
-
+dotenv.config()
 type ConnectionObject = {
     isConnected?: number
 }
@@ -14,6 +15,7 @@ async function dbConnect(): Promise<void> {
         console.log("Already Connected Database");
         return
     }
+    console.log(process.env.MONGODB_URI)
 
     try{
        const db = await mongoose.connect(process.env.MONGODB_URI || '', {})
@@ -27,5 +29,5 @@ async function dbConnect(): Promise<void> {
     }
     
 }
-
+dbConnect()
 export default dbConnect
