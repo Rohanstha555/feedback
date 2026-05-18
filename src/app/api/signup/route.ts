@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import { SendVerificationEmail } from "@/helper/SendVerificationEmail";
 
 export async function POST(request: Request) {
-  await dbConnect()
+  await dbConnect();
   try {
     const { username, email, password } = await request.json();
     const existingUserVerifiedByUsername = await UserModel.findOne({
@@ -56,7 +56,7 @@ export async function POST(request: Request) {
         verifyCodeExpiry: expiaryDate,
         isVerified: false,
         isAcceptMsg: true,
-        message: [],
+        messages: [],
       });
       await newUser.save();
     }
@@ -74,11 +74,9 @@ export async function POST(request: Request) {
       });
     }
     return Response.json({
-        success: true,
+      success: true,
       message: "User Registered Successfully. Please Verify Email",
-    }) 
-    
-
+    });
   } catch (error) {
     console.log("error registering user", error);
     return Response.json(
