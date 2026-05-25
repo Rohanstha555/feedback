@@ -1,33 +1,27 @@
-
 import mongoose from "mongoose";
-import dotenv from "dotenv"
 
-dotenv.config()
 type ConnectionObject = {
-    isConnected?: number
-}
+  isConnected?: number;
+};
 
-const connection: ConnectionObject = {}
-
+// ✅ attach to global so it survives across requests
+const connection: ConnectionObject = (global as any)._mongoConnection || {};
+(global as any)._mongoConnection = connection;
 
 async function dbConnect(): Promise<void> {
-    if(connection.isConnected){
-        console.log("Already Connected Database");
-        return
-    }
-    console.log(process.env.MONGODB_URI)
+  if (connection.isConnected) {
+    console.log("Already connected to database");
+    return;
+  }
 
-    try{
-       const db = await mongoose.connect(process.env.MONGODB_URI || '', {})
-
-       connection.isConnected = db.connections[0].readyState
-       console.log("db connected Successfully");
-       
-    }catch(error){
-        console.log("faild to connect", error)
-        process.exit(1)
-    }
-    
+  try {
+    const db = await mongoose.connect(process.env.MONGODB_URI || "");
+    connection.isConnected = db.connections[0].readyState;
+    console.log("DB connected successfully");
+  } catch (error) {
+    console.error("Failed to connect", error);
+    process.exit(1);
+  }
 }
-dbConnect()
-export default dbConnect
+
+export default dbConnect;
