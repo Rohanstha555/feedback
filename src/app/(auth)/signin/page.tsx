@@ -33,6 +33,8 @@ function Page() {
         identifier: data.identifier,
         password: data.password,
       });
+      console.log(res);
+      
       if (res?.error) {
         toast.error("Invalid email or password");
         return;

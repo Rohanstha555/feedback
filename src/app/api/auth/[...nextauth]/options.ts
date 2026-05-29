@@ -11,12 +11,12 @@ export const authOptions: NextAuthOptions = {
       id: "credentials",
       name: "Credentials",
       credentials: {
-        email: { label: "email", type: "text" },
+        identifier: { label: "email or username", type: "text" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials: any): Promise<any> {
         await dbConnect();
-
+        console.log("credentials received:", credentials)
         try {
           const user = await UserModel.findOne({
             $or: [
@@ -75,7 +75,7 @@ export const authOptions: NextAuthOptions = {
     },
   },
   pages: {
-    signIn: "/sign-in",
+    signIn: "/signin",
   },
   session: {
     strategy: "jwt",
