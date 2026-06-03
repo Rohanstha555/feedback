@@ -42,7 +42,7 @@ function Page() {
   const fetchAcceptMessage = useCallback(async () => {
     try {
       const res = await axios.get<ApiResponse>("/api/acceptMessage");
-      console.log(res);
+      console.log("acceptMessage response:", res);
 
       setValue("acceptMessage", res.data.isAcceptingMessage ?? false);
     } catch (error) {
@@ -58,12 +58,14 @@ function Page() {
     setIsLoading(true);
     try {
       const res = await axios.get<ApiResponse>("/api/getMessage");
-      console.log(res.data);
+      console.log("fetch message response:", res.data);
       setMessage(res.data.messages || []);
     } catch (error) {
-      toast.error("failed to fetch messages");
-    }
-  }, [setMessage, setIsLoading]);
+      const axiosError = error as AxiosError<ApiResponse>;
+      toast.error(axiosError.response?.data.message ?? "failed to fetch messages");
+    } finally {
+      setIsLoading(false);  // ✅ always runs, success or error
+    } }, [setMessage, setIsLoading]);
 
   useEffect(() => {
     if (!session || !session.user) return;

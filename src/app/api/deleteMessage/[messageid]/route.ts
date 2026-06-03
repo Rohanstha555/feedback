@@ -9,9 +9,9 @@ export async function DELETE(
   request: Request,
   { params }: { params: { messageid: string } },
 ) {
-  const messageId = params.messageid;
   await dbConnect();
-
+  
+  const {messageid} = await params
   const session = await getServerSession(authOptions);
   const user: User = session?.user as User;
 
@@ -25,16 +25,21 @@ export async function DELETE(
     );
   }
 
+console.log("messageId from params:", messageid)
+console.log("user._id:", user._id)
+
   try {
     const result = await UserModel.updateOne(
       { _id: user._id },
-      { $pull: { messages: { _id: new mongoose.Types.ObjectId(messageId) } } },
+      { $pull: { messages: { _id: new mongoose.Types.ObjectId(messageid) } } },
     );
+    console.log("result: ", result);
+    
     if (result.modifiedCount == 0) {
       return Response.json(
         {
           success: false,
-          message: "message not foound or deleted",
+          message: "message not found or deleted",
         },
         { status: 404 },
       );

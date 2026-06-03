@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "./ui/button";
 import { X } from "lucide-react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 import { ApiResponse } from "@/types/ApiResponse";
 import { Message } from "@/model/User";
@@ -37,10 +37,12 @@ function MessageCard({message, onMessageDelete}: MessageCardProp) {
         try {
             const res = await axios.delete<ApiResponse>(`/api/deleteMessage/${message._id}`)
             toast.success(res.data.message)
+            onMessageDelete(message._id.toString())
         } catch (error) {
-            toast.error("Something went wrong");
+             const axiosError = error as AxiosError<ApiResponse>
+        console.log(axiosError.response?.data)  // ✅ see actual error
+        toast.error(axiosError.response?.data.message ?? "Something went wrong");
         }
-        onMessageDelete(message._id.toString())
     }
 
   return (
@@ -65,10 +67,9 @@ function MessageCard({message, onMessageDelete}: MessageCardProp) {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-        <CardDescription>Card Description</CardDescription>
       </CardHeader>
       <CardContent>
-        <p>Card Content</p>
+        <p>{message.content}</p>
       </CardContent>
     </Card>
   );

@@ -2,14 +2,18 @@ import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/model/User";
 import { Message } from "@/model/User";
 
-export async function POST(request: Request) {
+export async function POST(request: Request, { params }: { params: { username: string } },) {
   await dbConnect();
-
-  const { username, content } = await request.json();
-
+  
+  const {username} = await params;
+  const { content } = await request.json();
+  console.log(username);
+  console.log(content);
+  
   try {
     const user = await UserModel.findOne({ username });
-
+    console.log(user);
+    
     if (!user) {
       return Response.json(
         {
