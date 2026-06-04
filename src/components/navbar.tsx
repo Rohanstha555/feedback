@@ -12,44 +12,51 @@ function Navbar() {
   const user = session?.user as User
   const router = useRouter()
 
-  const redirectDashboard = () => {
-    router.push("/dashboard")
-  }
-
   return (
-    <nav className="flex items-center justify-between px-6 h-14 border-b bg-white">
-      
-       <Link href="/" className="flex items-center gap-2">
-          <div className="w-7 h-7 bg-[#18181b] rounded-lg flex items-center justify-center cursor-pointer">
-            <MessageCircleMore className="w-3.5 h-3.5 text-[#a3e635]" />
-          </div>
-          <span className="text-[14px] font-semibold text-[#18181b] tracking-tight cursor-pointer">
-            Feedback
-          </span>
-        </Link>
+    <nav className="flex items-center justify-between px-6 h-14 border-b border-[#3f3f46] bg-[#18181b]">
 
-      <div className="flex items-center gap-8">
-        <Link href="/" className="text-sm text-muted-foreground hover:text-foreground">Home</Link>
-        <Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Explore</Link>
-        <Link href="#" className="text-sm text-muted-foreground hover:text-foreground">About</Link>
+      <Link href="/" className="flex items-center gap-2">
+        <div className="w-7 h-7 bg-[#27272a] border border-[#3f3f46] rounded-lg flex items-center justify-center">
+          <MessageCircleMore className="w-3.5 h-3.5 text-[#a3e635]" />
+        </div>
+        <span className="text-[14px] font-semibold text-white tracking-tight">
+          Feedback
+        </span>
+      </Link>
+
+      <div className="flex items-center gap-6">
+        <Link href="/" className="text-[13px] text-[#71717a] hover:text-[#d4d4d8] transition-colors">Home</Link>
+        <Link href="#" className="text-[13px] text-[#71717a] hover:text-[#d4d4d8] transition-colors">Explore</Link>
+        <Link href="#" className="text-[13px] text-[#71717a] hover:text-[#d4d4d8] transition-colors">About</Link>
       </div>
 
       <div className="flex items-center gap-3">
         {session ? (
           <>
-            <div onClick={redirectDashboard} className="flex items-center cursor-pointer gap-2 px-3 py-1 rounded-full border bg-muted text-sm">
-              <div  className="w-7 h-7 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs font-medium">
+            <div
+              onClick={() => router.push("/dashboard")}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#3f3f46] bg-[#27272a] hover:bg-[#3f3f46] transition-colors cursor-pointer"
+            >
+              <div className="w-6 h-6 rounded-full bg-[#18181b] border border-[#3f3f46] text-[#a3e635] flex items-center justify-center text-[11px] font-medium">
                 {user?.username?.[0]?.toUpperCase() ?? user?.email?.[0]?.toUpperCase() ?? '?'}
               </div>
-              <span className="font-medium">{user?.username || user?.email}</span>
+              <span className="text-[13px] font-medium text-[#d4d4d8]">
+                {user?.username || user?.email}
+              </span>
             </div>
-            <Button variant="outline" size="sm" onClick={() => signOut()}>
+            <button
+              onClick={() => signOut()}
+              className="h-8 px-3 rounded-lg border border-[#3f3f46] bg-transparent text-[13px] text-[#71717a] hover:bg-[#27272a] hover:text-[#d4d4d8] transition-colors cursor-pointer"
+            >
               Logout
-            </Button>
+            </button>
           </>
         ) : (
-          <Link href="/signin">
-            <Button size="sm">Login</Button>
+          <Link
+            href="/signin"
+            className="h-8 px-4 rounded-lg bg-[#a3e635] hover:bg-[#b4ef47] text-[#18181b] text-[13px] font-medium transition-colors flex items-center"
+          >
+            Login
           </Link>
         )}
       </div>
