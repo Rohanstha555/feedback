@@ -1,14 +1,5 @@
 "use client";
 import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -20,7 +11,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "./ui/button";
-import { X } from "lucide-react";
+import { Clock, Trash2, User, X } from "lucide-react";
 import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 import { ApiResponse } from "@/types/ApiResponse";
@@ -31,48 +22,62 @@ type MessageCardProp = {
     onMessageDelete: (messageId: string) => void 
 }
 
-function MessageCard({message, onMessageDelete}: MessageCardProp) {
+function MessageCard({ message, onMessageDelete }: MessageCardProp) {
 
-    const handleDelete = async () => {
-        try {
-            const res = await axios.delete<ApiResponse>(`/api/deleteMessage/${message._id}`)
-            toast.success(res.data.message)
-            onMessageDelete(message._id.toString())
-        } catch (error) {
-             const axiosError = error as AxiosError<ApiResponse>
-        console.log(axiosError.response?.data)  // ✅ see actual error
-        toast.error(axiosError.response?.data.message ?? "Something went wrong");
-        }
+  const handleDelete = async () => {
+    try {
+      const res = await axios.delete<ApiResponse>(`/api/deleteMessage/${message._id}`)
+      toast.success(res.data.message)
+      onMessageDelete(message._id.toString())
+    } catch (error) {
+      const axiosError = error as AxiosError<ApiResponse>
+      toast.error(axiosError.response?.data.message ?? "Something went wrong")
     }
+  }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Card Title</CardTitle>
+    <div className="bg-white border border-[#ebebeb] rounded-2xl p-5">
+      <div className="flex items-start justify-between gap-3">
+        
+        <div className="flex items-start gap-3 flex-1">
+          <div className="w-8 h-8 rounded-full bg-[#fafafa] border border-[#e4e4e7] flex items-center justify-center flex-shrink-0 mt-0.5">
+            <User className="w-4 h-4 text-[#a1a1aa]" />
+          </div>
+          <div className="flex-1">
+            <p className="text-[12px] text-[#a1a1aa] mb-1">Anonymous</p>
+            <p className="text-[14px] text-[#18181b] leading-relaxed">{message.content}</p>
+          </div>
+        </div>
+
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant="destructive"><X className="w-5 h-5"/></Button>
+            <button className="w-7 h-7 rounded-lg border border-[#e4e4e7] bg-transparent hover:bg-[#fafafa] flex items-center justify-center flex-shrink-0 text-[#a1a1aa] hover:text-[#ef4444] transition-colors cursor-pointer">
+              <Trash2 className="w-3.5 h-3.5" />
+            </button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogTitle>Delete message?</AlertDialogTitle>
               <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete your
-                account from our servers.
+                This action cannot be undone.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDelete}>Continue</AlertDialogAction>
+              <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-      </CardHeader>
-      <CardContent>
-        <p>{message.content}</p>
-      </CardContent>
-    </Card>
-  );
-}
 
-export default MessageCard;
+      </div>
+
+      <div className="mt-3 pt-3 border-t border-[#f4f4f5] flex items-center gap-1.5">
+        <Clock className="w-3 h-3 text-gray-600" />
+        <span className="text-[12px] text-gray-600">
+          {new Date(message.createdAt).toLocaleDateString()}
+        </span>
+      </div>
+    </div>
+  )
+}
+export default MessageCard

@@ -161,7 +161,7 @@ function Page() {
                 : "You won't receive new messages"}
             </p>
           </div>
-          <div className="border border-red-500 p-2">
+          <div >
             <Switch checked={acceptMessage} onCheckedChange={handleSwitch} />
           </div>
         </div>
