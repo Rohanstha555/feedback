@@ -1,7 +1,21 @@
+"use client"
+
 import Link from "next/link";
 import { MessageCircleMore, Lock, Zap, ArrowRight } from "lucide-react";
+import { User } from "next-auth";
+import { useSession } from "next-auth/react";
 
 export default function Home() {
+
+  const { data: session } = useSession();
+  const user = session?.user as User | undefined;
+  // If user is not logged in, default to a placeholder
+  const username = user?.username || "username";
+  
+  // Safely check for window to avoid SSR "window is not defined" errors
+  const baseUrl = typeof window !== "undefined" ? `${window.location.protocol}//${window.location.host}` : "http://localhost:3000";
+  const profileUrl = `${baseUrl}/u/${username}`;
+
   return (
     <div className="min-h-screen bg-[#18181b]">
 
@@ -52,7 +66,7 @@ export default function Home() {
               </p>
               <div className="bg-[#18181b] border border-[#3f3f46] rounded-lg px-4 h-10 flex items-center">
                 <span className="text-[12px] text-[#52525b]">
-                  feedback.app/u/puntu
+                  {profileUrl}
                 </span>
               </div>
             </div>
